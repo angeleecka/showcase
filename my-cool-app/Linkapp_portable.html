@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linkapp</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #333;
+        color: #f4f4f9;
+      }
+      main {
+        flex: 1;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 25px;
+        background-color: #222;
+        color: white;
+        border-bottom: 2px solid #555;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      #logo-text {
+        font-size: 2.2em;
+        font-weight: bold;
+        color: #d5aa65;
+        margin-right: auto;
+      }
+      .main-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-left: 20px;
+      }
+      .header-action {
+        background-color: transparent;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.95em;
+        transition: all 0.2s ease-in-out;
+      }
+      .header-action:hover {
+        color: #ccc;
+        box-shadow: inset 0 0 0 1px grey;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      header::after {
+        content: "";
+        display: block;
+        height: 1px;
+        background-color: silver;
+        margin-top: 1px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+      footer::before {
+        content: "";
+        display: block;
+        height: 1px;
+        background-color: silver;
+        margin-bottom: 1rem;
+        box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        background-color: #333;
+        position: relative;
+        z-index: 1;
+      }
+      .section {
+        margin-bottom: 2rem;
+      }
+      .section-title {
+        font-size: 1.8rem;
+        margin: 2rem 0 1rem;
+        color: white;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        cursor: default;
+        justify-content: flex-start;
+        position: relative;
+      }
+      .section-title .section-edit-icon {
+        font-size: 0.8em;
+        margin-left: 15px;
+        color: #d5aa65;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        vertical-align: middle;
+      }
+      .section-title .section-edit-icon:hover {
+        color: red;
+      }
+      .assignments-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .assignment-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1.5rem;
+        background-color: transparent;
+        color: #d5aa65;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        transition: color 0.3s, transform 0.2s;
+        position: relative;
+        border-right: 2px solid #d5aa65;
+        border-bottom: 2px solid #d5aa65;
+        white-space: normal;
+        cursor: pointer;
+        padding: 1.5rem;
+        min-height: 60px;
+      }
+      .assignment-button:hover {
+        background-color: rgba(213, 170, 101, 0.15) !important;
+      }
+      .copiright {
+        color: #d5aa65;
+        text-decoration: none;
+        text-align: center;
+        margin: 0;
+        padding: 0.5rem 0;
+      }
+      .edit-link {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 30px;
+        height: 30px;
+        font-size: 1.5rem;
+        color: white;
+        background-color: transparent;
+        padding: 0;
+        border-radius: 50%;
+        cursor: pointer;
+        text-decoration: none;
+        line-height: 30px;
+        text-align: center;
+        border: none;
+        transition: color 0.2s ease;
+        z-index: 5;
+      }
+      .edit-link:hover {
+        color: red;
+      }
+      .add-button {
+        background-color: transparent;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0.5rem;
+      }
+      .add-button:hover {
+        color: #eece91;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .add-section {
+        background-color: transparent;
+        color: white;
+        border: 1px solid white;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s ease;
+      }
+      .add-section:hover {
+        color: #ccc;
+        box-shadow: inset 0 0 0 1px grey;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .modal-edit {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-edit-content {
+        background-color: #e0e0e0;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      .modal-logo-text {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .modal-edit-content p {
+        max-width: 80%;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .close-button {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
+      .close-button:hover,
+      .close-button:focus {
+        color: red;
+        text-decoration: none;
+      }
+      .modal-body {
+        padding-top: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        width: 100%;
+        margin-top: 40px;
+        color: #333;
+      }
+      .modal-body .modal-buttons-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .modal-body input[type="text"],
+      .modal-body input[type="password"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #555;
+        color: #aaa;
+        font-size: 1em;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+        box-sizing: border-box;
+      }
+      .modal-body input[type="text"]:hover,
+      .modal-body input[type="password"]:hover,
+      .modal-body input[type="text"]:focus,
+      .modal-body input[type="password"]:focus {
+        background-color: #333;
+        border-color: #4caf50;
+        outline: none;
+      }
+      .modal-edit-content button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        color: white;
+        background-color: #333;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        margin: 5px;
+        width: auto;
+        display: inline-block;
+        box-sizing: border-box;
+      }
+      .modal-edit-content button.save:hover {
+        background-color: #4caf50;
+      }
+      .modal-edit-content button.delete:hover {
+        background-color: #f44336;
+      }
+      .modal-edit-content button.cancel:hover {
+        background-color: #666;
+      }
+
+      .modal-body textarea {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #555;
+        color: #fff;
+        font-size: 1rem;
+        box-sizing: border-box;
+        resize: vertical;
+      }
+      .modal-body textarea:focus {
+        background-color: #333;
+        border-color: #4caf50;
+        outline: none;
+      }
+
+      #confirmImportBtn:hover {
+        background-color: #007bff;
+      }
+      #historyModal .modal-edit-content {
+        max-width: 600px;
+      }
+      #historyModal h2 {
+        color: #2c3e50;
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+      }
+      .history-list {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+      .history-item {
+        background-color: #f9f9f9;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .history-item p {
+        margin: 0;
+        line-height: 1.4;
+      }
+      .history-item strong {
+        color: #3498db;
+      }
+      .history-item .deleted-at {
+        margin-left: auto;
+        font-size: 0.8em;
+        color: #777;
+      }
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+      }
+      #clearHistoryBtn {
+        background-color: #dc3545;
+      }
+      #clearHistoryBtn:hover {
+        background-color: #c82333;
+      }
+      .modal-actions .action-button:not(#clearHistoryBtn):hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #eece91;
+      }
+      #historyModal .restore-button {
+        background-color: #333;
+        color: white;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+        margin-top: 10px;
+        align-self: flex-end;
+        transition: background-color 0.2s ease;
+      }
+      #historyModal .restore-button:hover {
+        background-color: #28a745 !important;
+        color: white;
+      }
+      footer {
+        width: 100%;
+        margin-top: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+
+        background: #222;
+      }
+      .footer-buttons {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .footer-buttons button,
+      .footer-buttons a {
+        max-width: 100%;
+        white-space: nowrap;
+      }
+      .pagination {
+        text-align: center;
+        margin: 1rem 0;
+      }
+      .pagination button {
+        background-color: transparent;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.95em;
+        transition: all 0.2s ease-in-out;
+      }
+      .pagination button:hover {
+        color: #eece91;
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: inset 0 0 0 1px grey;
+      }
+      .pagination button.active {
+        color: #eece91;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      #feedbackModal input[type="text"],
+      #feedbackModal input[type="email"],
+      #feedbackModal textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #555;
+        color: white;
+        font-size: 1em;
+        box-sizing: border-box;
+      }
+      #feedbackModal input[type="text"]:focus,
+      #feedbackModal input[type="email"]:focus,
+      #feedbackModal textarea:focus {
+        background-color: #333;
+        border-color: #4caf50;
+        outline: none;
+      }
+      .about-list {
+        text-align: left;
+        margin: 10px 0;
+        padding-left: 20px;
+        line-height: 1.6;
+      }
+      .about-list li {
+        margin-bottom: 5px;
+      }
+
+      #toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .toast {
+        background: #333;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .toast-success {
+        background: #4caf50;
+      }
+
+      .toast-error {
+        background: #f44336;
+      }
+
+      .toast-info {
+        background: #2196f3;
+      }
+
+      @media (max-width: 600px) {
+        .assignment-button {
+          font-size: 1rem;
+          padding: 1rem;
+        }
+      }
+      @media (max-width: 768px) {
+        body {
+          font-size: 0.9rem;
+        }
+        header {
+          padding: 10px 15px;
+        }
+        #logo-text {
+          font-size: 1.5em;
+        }
+        .main-actions {
+          gap: 5px;
+        }
+        .header-action {
+          padding: 6px 10px;
+          font-size: 0.85em;
+        }
+        .container {
+          max-width: none;
+          padding: 1rem;
+        }
+        .section-title {
+          font-size: 1.5rem;
+        }
+        .assignments-grid {
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+        .assignment-button {
+          font-size: 1rem;
+          padding: 1rem;
+        }
+        .add-button {
+          width: 30px;
+          height: 30px;
+        }
+        .modal-edit-content {
+          max-width: 90%;
+        }
+        .modal-buttons-group button {
+          padding: 8px 12px;
+          font-size: 0.9em;
+        }
+        .pagination {
+          font-size: 0.9rem;
+        }
+        .pagination button {
+          padding: 0.4rem 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span id="logo-text">Linkapp</span>
+      <div class="main-actions">
+        <button class="header-action" id="saveBtn">Save</button>
+        <button class="header-action" id="openBtn">Open</button>
+        <div class="header-actions">
+          <button id="openHistoryBtn" class="header-action">History</button>
+        </div>
+      </div>
+      <input type="file" id="importInput" accept="*/*" style="display: none" />
+    </header>
+    <main>
+      <div class="container" id="container">
+        <button class="add-section" id="addSectionBtn">+ Add section</button>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </main>
+    <footer>
+      <p class="copiright">Link manager. Created by Angevicka Bond | 2025</p>
+      <div class="footer-buttons">
+        <button class="header-action" id="contactBtn">
+          Contact with developer
+        </button>
+        <button class="header-action" id="aboutBtn">About</button>
+      </div>
+    </footer>
+    <div class="modal-edit" id="editModal">
+      <div class="modal-edit-content">
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeEditModal">&times;</span>
+        <div class="modal-body">
+          <label for="newText">Do you want to change the button name?</label>
+          <input type="text" id="newText" placeholder="Enter name" />
+          <label for="newLink">Do you want to change the link?</label>
+          <input type="text" id="newLink" placeholder="Enter URL" />
+          <div class="modal-buttons-group">
+            <button class="save" id="saveLinkBtn">Save</button>
+            <button class="delete" id="deleteButtonBtn">
+              Delete this button
+            </button>
+            <button
+              class="cancel"
+              id="cancelEditModalBtn"
+              data-translate="closeButton"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-edit" id="sectionModal">
+      <div class="modal-edit-content">
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeSectionModal">&times;</span>
+        <div class="modal-body">
+          <label for="sectionText"
+            >Do you want to change the section name?</label
+          >
+          <input
+            type="text"
+            id="sectionText"
+            placeholder="Enter section name"
+          />
+          <div class="modal-buttons-group">
+            <button class="save" id="saveSectionBtn">Save</button>
+            <button class="delete" id="deleteSectionBtn">
+              Delete this section
+            </button>
+            <button class="cancel" id="cancelSectionModal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-edit" id="passwordModal">
+      <div class="modal-edit-content">
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closePasswordModal">&times;</span>
+        <div class="modal-body">
+          <h2>Set Password</h2>
+          <label for="password">Password:</label>
+          <input type="password" id="password" placeholder="Enter password" />
+          <div class="modal-buttons-group">
+            <button class="save" id="setPasswordBtn">Save</button>
+            <button class="cancel" id="cancelPasswordModal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-edit" id="bookModal">
+      <div
+        class="modal-edit-content"
+        style="
+          max-width: 90%;
+          height: 90%;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeBookModal">&times;</span>
+        <div
+          class="modal-body"
+          style="
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+          "
+        >
+          <h2>Preview</h2>
+          <iframe
+            id="bookFrame"
+            style="flex-grow: 1; border: none; width: 100%"
+          ></iframe>
+          <div class="modal-buttons-group" style="margin-top: 10px">
+            <button class="cancel" id="cancelBookModal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-edit" id="saveConfirmModal">
+      <div class="modal-edit-content">
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeSaveConfirmModal">&times;</span>
+        <div class="modal-body">
+          <h2>Save LinkAPP data?</h2>
+          <p>You are about to save all your data.</p>
+          <p>
+            For convenience, we recommend creating a "Storage" folder on your
+            desktop to store your LinkAPP data. This will help you manage
+            backups and easily transfer them.
+          </p>
+          <p>Click "Yes, save" to save your data.</p>
+          <div class="modal-buttons-group">
+            <button id="confirmSaveBtn" class="save">Yes, save</button>
+            <button class="cancel" id="cancelSaveConfirmModal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-edit" id="importConfirmModal">
+      <div class="modal-edit-content">
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeImportConfirmModal">&times;</span>
+        <div class="modal-body">
+          <h2>Load LinkAPP data?</h2>
+          <p>You are about to restore your data from a file.</p>
+          <p>Please find a previously saved file on your computer.</p>
+          <p>
+            Click "Yes, open my saved data" to open the explorer and select your
+            data.
+          </p>
+          <div class="modal-buttons-group">
+            <button id="confirmImportBtn" class="save">
+              Yes, open my saved data
+            </button>
+            <button id="pasteImportBtn" class="save">Paste JSON</button>
+            <button class="cancel" id="cancelImportConfirmModal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-edit" id="historyModal">
+      <div class="modal-edit-content">
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeHistoryModal">&times;</span>
+        <div class="modal-body">
+          <h2>Deletion History</h2>
+          <div id="historyList" class="history-list"></div>
+          <div class="modal-actions">
+            <button id="clearHistoryBtn" class="delete">Clear History</button>
+            <button class="cancel" id="cancelHistoryModal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-edit" id="aboutModal">
+      <div class="modal-edit-content">
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeAboutModal">&times;</span>
+        <div
+          class="modal-body"
+          style="align-items: flex-start; text-align: left"
+        >
+          <h2>About Linkapp</h2>
+          <p>
+            Linkapp is a simple and fast tool for managing your links,
+            bookmarks, and quick access buttons. It's a single HTML file that
+            works offline right in your browser. All your data is stored locally
+            on your device, ensuring privacy and security.
+          </p>
+          <p>Key features:</p>
+          <ul class="about-list">
+            <li>
+              **Local Data Storage:** All your information is stored in your
+              browser's local storage. This means your data is always private
+              and never leaves your computer.
+            </li>
+            <li>
+              **Fully Customizable:** Easily create, edit, and delete sections
+              and link buttons to organize your data however you like.
+            </li>
+            <li>
+              **Multi-Page Support:** Use the pagination at the bottom to create
+              and switch between multiple pages of links.
+            </li>
+            <li>
+              **Save & Open:** Manually save your data to a JSON file for
+              backups or easy transfer between devices. You can also import data
+              from a saved file.
+            </li>
+            <li>
+              **Deletion History:** Accidentally deleted a link or section? No
+              problem! The deletion history allows you to view and restore
+              deleted items.
+            </li>
+            <li>
+              **Password Protection:** Set a password to protect your data from
+              unauthorized access.
+            </li>
+            <li>
+              **Responsive Design:** The application is designed to look and
+              work great on both desktop and mobile devices.
+            </li>
+            <li>
+              **One-File Solution:** The entire application is contained in a
+              single HTML file, making it easy to manage and use.
+            </li>
+          </ul>
+          <div class="modal-buttons-group">
+            <button class="cancel" id="cancelAboutModal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="feedbackModal" class="modal-edit">
+      <div class="modal-edit-content">
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeFeedbackModal">&times;</span>
+        <div class="modal-body">
+          <h2>Contact with Developer</h2>
+
+          <form
+            id="feedbackForm"
+            action="https://formspree.io/f/manbpyde"
+            method="POST"
+          >
+            <p style="color: #666; font-size: 1.2em; margin-bottom: 15px">
+              You can leave a review,<br />suggestions for the development of
+              this application<br />
+              or order me to develop a website, bot, application<br />for your
+              own tasks.
+            </p>
+            <input
+              type="text"
+              id="feedbackName"
+              name="name"
+              placeholder="Your name"
+            />
+            <input
+              type="email"
+              id="feedbackEmail"
+              name="email"
+              placeholder="Your email"
+            />
+            <textarea
+              id="feedbackMessage"
+              name="message"
+              rows="4"
+              placeholder="Your message..."
+            ></textarea>
+            <div class="modal-buttons-group">
+              <button type="submit" class="save">Send Feedback</button>
+              <button type="button" class="cancel" id="cancelFeedbackModal">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- UNIVERSAL CONFIRM -->
+    <div class="modal-edit" id="customConfirmModal" style="display: none">
+      <div
+        class="modal-edit-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="customConfirmTitle"
+      >
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeCustomConfirm">&times;</span>
+        <div class="modal-body">
+          <h2 id="customConfirmTitle">Confirm</h2>
+          <p id="customConfirmMessage">Are you sure?</p>
+          <div class="modal-buttons-group">
+            <button class="save" id="customConfirmYes">Yes</button>
+            <button class="cancel" id="customConfirmNo">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANUAL IMPORT (paste JSON) -->
+    <div class="modal-edit" id="customPromptModal" style="display: none">
+      <div
+        class="modal-edit-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="customPromptTitle"
+      >
+        <span class="modal-logo-text">Linkapp</span>
+        <span class="close-button" id="closeCustomPrompt">&times;</span>
+        <div class="modal-body" style="align-items: stretch">
+          <h2 id="customPromptTitle">Paste JSON</h2>
+          <p id="customPromptMessage">
+            Paste your JSON backup below and click Import.
+          </p>
+
+          <textarea
+            id="customPromptInput"
+            rows="8"
+            placeholder='{"pages":[...]}'
+          ></textarea>
+
+          <div class="modal-buttons-group">
+            <button class="save" id="customPromptOk">Import</button>
+            <button class="cancel" id="customPromptCancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+      let currentButtonId = null;
+      let currentSectionId = null;
+      let currentPageIndex = 0;
+      let appData = { pages: [], deletedItemsHistory: [] };
+      const lang = {
+        alertNoPage: "Please create a page first!",
+        alertNoSection: "Section not found on current page!",
+        alertLimit: "You've reached the limit of 500 buttons in this section!",
+        alertAccessDenied: "Access denied",
+        passwordPrompt: "Enter password to access:",
+        alertPasswordSet: "Password set!",
+        alertPasswordRemoved: "Password removed!",
+        alertImportSuccess: "Data successfully imported!",
+      };
+
+      function showModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.style.display = "flex";
+      }
+      function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        console.log("Closing the modal:", modalId, modal);
+        if (modal) modal.style.display = "none";
+        if (modalId === "editModal") {
+          document.getElementById("newLink").value = "";
+          document.getElementById("newText").value = "";
+          currentButtonId = null;
+        } else if (modalId === "sectionModal") {
+          document.getElementById("sectionText").value = "";
+          currentSectionId = null;
+        } else if (modalId === "passwordModal") {
+          document.getElementById("password").value = "";
+        }
+      }
+
+      async function cancelAction(modalId) {
+        const hasChanges = checkForUnsavedChanges(modalId);
+        if (hasChanges) {
+          const confirmed = await customConfirm(
+            "Do you want to cancel the changes? The data you entered will be lost.",
+            {
+              title: "Discard changes",
+              yesText: "Yes, discard",
+              noText: "No, keep",
+            }
+          );
+          if (!confirmed) return;
+        }
+        closeModal(modalId);
+      }
+      function checkForUnsavedChanges(modalId) {
+        switch (modalId) {
+          case "editModal":
+            return (
+              document.getElementById("newText").value.trim() !== "" ||
+              document.getElementById("newLink").value.trim() !== ""
+            );
+          case "sectionModal":
+            return document.getElementById("sectionText").value.trim() !== "";
+          case "passwordModal":
+            return document.getElementById("password").value.trim() !== "";
+          default:
+            return false;
+        }
+      }
+
+      function saveData() {
+        try {
+          localStorage.setItem("linkAppData", JSON.stringify(appData));
+        } catch (e) {
+          console.error("Failed to save data to localStorage:", e);
+          showToast(
+            "Failed to save data. Your browser extensions may be blocking access to local storage.",
+            "error"
+          );
+        }
+      }
+      function loadData() {
+        try {
+          const stored = localStorage.getItem("linkAppData");
+          if (stored) {
+            try {
+              appData = JSON.parse(stored);
+              if (!Array.isArray(appData.deletedItemsHistory)) {
+                appData.deletedItemsHistory = [];
+              }
+              if (
+                !appData.pages ||
+                !Array.isArray(appData.pages) ||
+                appData.pages.length === 0
+              ) {
+                initializeDefaultPages();
+              }
+            } catch (e) {
+              console.error("Failed to parse stored data", e);
+              initializeDefaultPages();
+            }
+          } else {
+            initializeDefaultPages();
+          }
+        } catch (e) {
+          console.error("Failed to load data from localStorage:", e);
+          initializeDefaultPages();
+          showToast(
+            "Failed to load data. Your browser extensions may be blocking access to local storage.",
+            "error"
+          );
+        }
+        saveData();
+      }
+
+      function initializeDefaultPages() {
+        appData.pages = [];
+        for (let i = 1; i <= 3; i++) {
+          const pageId = `page-${Date.now()}-${i}`;
+          const sectionId = `section-${Date.now()}-${i}-1`;
+          const buttonId = `button-${Date.now()}-${i}-1-1`;
+          appData.pages.push({
+            id: pageId,
+            name: `Page ${i}`,
+            sections: {
+              [sectionId]: {
+                text: `New Section`,
+                buttons: [{ id: buttonId, text: `New button`, href: "" }],
+              },
+            },
+          });
+        }
+      }
+      function renderApp() {
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          document.body.style.fontSize = "0.9rem";
+        } else {
+          document.body.style.fontSize = "1rem";
+        }
+        renderCurrentPage();
+        setupPagination();
+      }
+      function renderCurrentPage() {
+        const container = document.getElementById("container");
+        container.innerHTML =
+          '<button class="add-section" id="addSectionBtn">+ Add section</button>';
+        const page = appData.pages[currentPageIndex];
+        if (!page || !page.sections) return;
+        Object.keys(page.sections).forEach((sectionId) => {
+          const section = page.sections[sectionId];
+          const sectionDiv = document.createElement("div");
+          sectionDiv.className = "section";
+          sectionDiv.innerHTML = ` <div class="section-title" data-id="${sectionId}"> ${
+            section.text || "Section"
+          } <span class="section-edit-icon" data-section-id="${sectionId}">↻</span> </div> <div id="assignments-grid-${sectionId}" class="assignments-grid"></div> `;
+          const grid = sectionDiv.querySelector(".assignments-grid");
+          (section.buttons || []).forEach((button) => {
+            const btn = document.createElement("a");
+            btn.className = "assignment-button";
+            btn.dataset.id = button.id;
+            btn.innerHTML = `${
+              button.text || "Unnamed"
+            }<span class="edit-link">↻</span>`;
+            btn.href = button.href || "#";
+            btn.querySelector(".edit-link").addEventListener("click", (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              currentButtonId = button.id;
+              currentSectionId = sectionId;
+              document.getElementById("newText").value = button.text || "";
+              document.getElementById("newLink").value = button.href || "";
+              showModal("editModal");
+            });
+            btn.addEventListener("click", (e) => {
+              if (
+                e.target.className === "edit-link" ||
+                !btn.href ||
+                btn.href === "#"
+              ) {
+                e.preventDefault();
+              } else {
+                window.open(btn.href, "_blank");
+                e.preventDefault();
+              }
+            });
+            grid.appendChild(btn);
+          });
+          const addBtn = document.createElement("a");
+          addBtn.className = "add-button";
+          addBtn.textContent = "+";
+          addBtn.addEventListener("click", () => addNewButton(sectionId));
+          grid.appendChild(addBtn);
+          container.insertBefore(
+            sectionDiv,
+            container.querySelector(".add-section")
+          );
+        });
+        setupSectionEvents();
+        document
+          .getElementById("addSectionBtn")
+          .addEventListener("click", addNewSection);
+      }
+      function setupSectionEvents() {
+        document
+          .querySelectorAll(".section-title .section-edit-icon")
+          .forEach((icon) => {
+            icon.removeEventListener("click", handleSectionEditClick);
+            icon.addEventListener("click", handleSectionEditClick);
+          });
+      }
+      function handleSectionEditClick(e) {
+        e.stopPropagation();
+        const sectionId = e.currentTarget.dataset.sectionId;
+        const section = appData.pages[currentPageIndex]?.sections[sectionId];
+        if (section) {
+          currentSectionId = sectionId;
+          document.getElementById("sectionText").value = section.text || "";
+          showModal("sectionModal");
+        }
+      }
+
+      function addNewSection() {
+        const page = appData.pages[currentPageIndex];
+        if (!page) {
+          showToast(lang.alertNoPage, "info");
+          return;
+        }
+        const newId = `section-${Date.now()}`;
+        page.sections[newId] = { text: "New Section", buttons: [] };
+        saveData();
+        renderApp();
+      }
+
+      function addNewButton(sectionId) {
+        const page = appData.pages[currentPageIndex];
+        const section = page?.sections[sectionId];
+        if (!section) {
+          showToast(lang.alertNoSection, "info");
+          return;
+        }
+
+        if (section.buttons.length >= 500) {
+          showToast(lang.alertLimit, "info");
+          return;
+        }
+        const newId = `button-${Date.now()}`;
+        section.buttons.push({ id: newId, text: "New button", href: "" });
+        saveData();
+        renderApp();
+      }
+
+      function saveLink() {
+        const text = document.getElementById("newText").value.trim();
+        const href = document.getElementById("newLink").value.trim();
+        if (!text || !currentButtonId || currentSectionId === null) {
+          showToast("Please fill in both fields.", "info");
+          return;
+        }
+
+        const section =
+          appData.pages[currentPageIndex]?.sections[currentSectionId];
+        const button = section?.buttons.find((b) => b.id === currentButtonId);
+        if (button) {
+          button.text = text;
+          button.href = href;
+          saveData();
+          renderApp();
+          closeModal("editModal");
+        }
+      }
+
+      function saveSection() {
+        const text = document.getElementById("sectionText").value.trim();
+        if (!text || currentSectionId === null) {
+          showToast("Please enter a section title.", "info");
+          return;
+        }
+
+        const section =
+          appData.pages[currentPageIndex]?.sections[currentSectionId];
+        if (section) {
+          section.text = text;
+          saveData();
+          renderApp();
+          closeModal("sectionModal");
+        }
+      }
+      function deleteButton() {
+        if (!currentSectionId || !currentButtonId) return;
+        const section =
+          appData.pages[currentPageIndex]?.sections[currentSectionId];
+        const index = section?.buttons?.findIndex(
+          (b) => b.id === currentButtonId
+        );
+        if (index === -1) return;
+        const button = section.buttons[index];
+        appData.deletedItemsHistory.push({
+          type: "button",
+          name: button.text,
+          link: button.href,
+          deletedAt: new Date().toISOString(),
+        });
+        section.buttons.splice(index, 1);
+        saveData();
+        renderApp();
+        closeModal("editModal");
+      }
+      function deleteSection() {
+        if (!currentSectionId) return;
+        const page = appData.pages[currentPageIndex];
+        const section = page?.sections[currentSectionId];
+        if (!section) return;
+        appData.deletedItemsHistory.push({
+          type: "section",
+          name: section.text,
+          buttons: { ...section.buttons },
+          deletedAt: new Date().toISOString(),
+        });
+        delete page.sections[currentSectionId];
+        saveData();
+        renderApp();
+        closeModal("sectionModal");
+        currentSectionId = null;
+      }
+
+      function setupPagination() {
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+        const totalPages = appData.pages.length;
+        if (totalPages <= 1) {
+          pagination.style.display = "none";
+          return;
+        }
+        pagination.style.display = "";
+
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "◀";
+        prevBtn.disabled = currentPageIndex === 0;
+        prevBtn.addEventListener("click", () => {
+          if (currentPageIndex > 0) {
+            currentPageIndex--;
+            renderApp();
+            saveData();
+          }
+        });
+        pagination.appendChild(prevBtn);
+
+        for (let i = 0; i < totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.textContent = i + 1;
+          btn.addEventListener("click", () => {
+            currentPageIndex = i;
+            renderApp();
+            saveData();
+          });
+          if (i === currentPageIndex) {
+            btn.disabled = true;
+            btn.classList.add("active");
+          }
+          pagination.appendChild(btn);
+        }
+
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "▶";
+        nextBtn.disabled = currentPageIndex === totalPages - 1;
+        nextBtn.addEventListener("click", () => {
+          if (currentPageIndex < totalPages - 1) {
+            currentPageIndex++;
+            renderApp();
+            saveData();
+          }
+        });
+        pagination.appendChild(nextBtn);
+
+        // Add page button
+        const addBtn = document.createElement("button");
+        addBtn.textContent = "+ Add page";
+        addBtn.className = "add-page-button";
+        addBtn.addEventListener("click", addNewPage);
+        pagination.appendChild(addBtn);
+
+        // Delete current page button (next to add)
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "− Delete current page";
+        delBtn.className = "delete-page-button";
+        delBtn.style.marginLeft = "0.5rem";
+        delBtn.addEventListener("click", async () => {
+          const ok = await customConfirm(
+            `Delete page ${
+              currentPageIndex + 1
+            }? This will remove the page and its sections.`,
+            {
+              title: "Delete page",
+              yesText: "Yes, delete",
+              noText: "No, cancel",
+            }
+          );
+          if (ok) deletePage(currentPageIndex);
+        });
+        pagination.appendChild(delBtn);
+      }
+
+      function addNewPage() {
+        const newId = `page-${Date.now()}`;
+        const sectionId = `section-${Date.now()}`;
+        const buttonId = `button-${Date.now()}`;
+        appData.pages.push({
+          id: newId,
+          name: `Page ${appData.pages.length + 1}`,
+          sections: {
+            [sectionId]: {
+              text: "New Section",
+              buttons: [{ id: buttonId, text: "New button", href: "" }],
+            },
+          },
+        });
+        saveData();
+        currentPageIndex = appData.pages.length - 1;
+        renderApp();
+      }
+      function deletePage(index) {
+        if (!Array.isArray(appData.pages) || appData.pages.length === 0) return;
+        if (appData.pages.length === 1) {
+          showToast("You cannot delete the last page.", "info");
+          return;
+        }
+        const page = appData.pages[index];
+        const name = page?.name || `Page ${index + 1}`;
+        // Save it in history - you can restore it if you want
+        appData.deletedItemsHistory.push({
+          type: "page",
+          name,
+          sections: page.sections,
+          deletedAt: new Date().toISOString(),
+        });
+        // delete the page
+        appData.pages.splice(index, 1);
+        // correcting the current page index
+        if (currentPageIndex >= appData.pages.length)
+          currentPageIndex = appData.pages.length - 1;
+        saveData();
+        renderApp();
+      }
+
+      async function exportData() {
+        const data = JSON.stringify(appData, null, 2);
+        const blob = new Blob([data], { type: "application/json" });
+        const file = new File(
+          [blob],
+          `linkapp-backup-${new Date().toISOString().split("T")[0]}.json`,
+          { type: "application/json" }
+        );
+
+        // ✅ if there is a "share" API (iOS/Android)
+        if (navigator.share && navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: "LinkApp Backup",
+              text: "Here is your exported LinkApp data.",
+            });
+            return;
+          } catch (err) {
+            console.warn("Share failed, fallback to download", err);
+          }
+        }
+
+        // ✅ fallback — regular download (desktop/Android)
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        showToast(
+          "Export started — choose where to save or share the file.",
+          "success"
+        );
+      }
+
+      // handler change input[type=file]
+      async function importData(event) {
+        const file = event?.target?.files?.[0];
+
+        if (!file) {
+          // If the file is not selected (or the system did not return the file), we suggest inserting the JSON manually.
+          const text = await customPrompt("Paste your JSON backup below:", {
+            title: "Manual import",
+          });
+          if (!text) return; // cancellation by user
+          try {
+            const imported = JSON.parse(text);
+            handleImportedData(imported);
+          } catch (err) {
+            showToast("Invalid JSON text: " + err.message, "error");
+          }
+          return;
+        }
+
+        // The usual way: reading a file
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const imported = JSON.parse(e.target.result);
+            handleImportedData(imported);
+          } catch (err) {
+            showToast("Invalid file format: " + err.message, "error");
+
+            console.error("Import error:", err);
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function handleImportedData(imported) {
+        if (imported.pages && Array.isArray(imported.pages)) {
+          appData = imported;
+          if (!Array.isArray(appData.deletedItemsHistory)) {
+            appData.deletedItemsHistory = [];
+          }
+        } else if (imported.sections) {
+          appData.pages = [
+            {
+              id: "imported-page",
+              name: "Imported Page",
+              sections: imported.sections,
+            },
+          ];
+          appData.deletedItemsHistory = [];
+        } else {
+          throw new Error("Invalid file format.");
+        }
+        saveData();
+        currentPageIndex = 0;
+        renderApp();
+        showToast(lang.alertImportSuccess, "success");
+      }
+
+      function setupPassword() {
+        try {
+          const savedPass = localStorage.getItem("password");
+          if (savedPass) {
+            const pass = prompt(lang.passwordPrompt);
+            if (pass !== savedPass) {
+              showToast(lang.alertAccessDenied, "error");
+              document.body.innerHTML = `<h1>${lang.alertAccessDenied}</h1>`;
+              return;
+            }
+          }
+        } catch (e) {
+          console.error("Failed to check password from localStorage:", e);
+          showToast(
+            "Failed to check password. Your browser extensions may be blocking access to local storage.",
+            "error"
+          );
+        }
+      }
+
+      const saveBtn = document
+        .getElementById("passwordModal")
+        ?.querySelector(".save");
+      if (saveBtn) {
+        saveBtn.removeEventListener("click", setPassword);
+        saveBtn.addEventListener("click", setPassword);
+      }
+
+      function setPassword() {
+        const input = document.getElementById("password");
+        const pass = input?.value.trim();
+        try {
+          if (pass) {
+            localStorage.setItem("password", pass);
+            showToast(lang.alertPasswordSet, "success");
+          } else {
+            localStorage.removeItem("password");
+            showToast(lang.alertPasswordRemoved, "success");
+          }
+        } catch (e) {
+          console.error("Failed to set/remove password in localStorage:", e);
+          showToast(
+            "Failed to set/remove password. Your browser extensions may be blocking access to local storage.",
+            "error"
+          );
+        }
+        closeModal("passwordModal");
+      }
+
+      function renderHistory() {
+        const list = document.getElementById("historyList");
+        if (!list) return;
+        list.innerHTML = "";
+        if (
+          !appData.deletedItemsHistory ||
+          appData.deletedItemsHistory.length === 0
+        ) {
+          list.innerHTML = "<p>Deletion history is empty.</p>";
+          return;
+        }
+
+        const reversed = JSON.parse(
+          JSON.stringify(appData.deletedItemsHistory)
+        ).reverse();
+
+        reversed.forEach((item, idx) => {
+          const originalIndex = appData.deletedItemsHistory.length - 1 - idx;
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "history-item";
+          let content = "";
+          if (item.type === "button") {
+            content = ` <p><strong>Button:</strong> ${
+              item.name || "Unnamed"
+            }</p> <p><strong>Link:</strong> <a href="${
+              item.link || "#"
+            }" target="_blank">${item.link || "No link"}</a></p> `;
+          } else if (item.type === "section") {
+            content = ` <p><strong>Section:</strong> ${
+              item.name || "Unnamed"
+            }</p> <p>(Buttons: ${Object.keys(item.buttons || {}).length})</p> `;
+          }
+          const date = item.deletedAt
+            ? new Date(item.deletedAt).toLocaleString()
+            : "Unknown";
+          content += `<p class="deleted-at">Deleted: ${date}</p>`;
+          itemDiv.innerHTML = content;
+          const restoreBtn = document.createElement("button");
+          restoreBtn.textContent = "Restore";
+          restoreBtn.className = "restore-button";
+          restoreBtn.dataset.historyIndex = originalIndex;
+          restoreBtn.addEventListener("click", () =>
+            restoreItem(originalIndex)
+          );
+          itemDiv.appendChild(restoreBtn);
+          const deleteIcon = document.createElement("span");
+          deleteIcon.textContent = "🗑️";
+          deleteIcon.style.cursor = "pointer";
+          deleteIcon.style.marginLeft = "10px";
+          deleteIcon.style.opacity = "0.6";
+          deleteIcon.style.fontSize = "1.1rem";
+          deleteIcon.title = "Delete this item from history";
+          deleteIcon.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            if (await customConfirm("Delete this item from history?")) {
+              appData.deletedItemsHistory.splice(originalIndex, 1);
+              saveData();
+              renderHistory();
+              showToast("History item deleted.", "success");
+            }
+          });
+          deleteIcon.onmouseover = () => (deleteIcon.style.opacity = "1");
+          deleteIcon.onmouseout = () => (deleteIcon.style.opacity = "0.6");
+          const actions = document.createElement("div");
+          actions.style.display = "flex";
+          actions.style.alignItems = "center";
+          actions.style.marginTop = "5px";
+          actions.appendChild(restoreBtn);
+          actions.appendChild(deleteIcon);
+          itemDiv.appendChild(actions);
+          list.appendChild(itemDiv);
+        });
+      }
+
+      async function clearHistory() {
+        if (
+          await customConfirm(
+            "Are you sure you want to clear the deletion history? This action cannot be undone.",
+            {
+              title: "Clear history",
+              yesText: "Yes, clear",
+              noText: "No, cancel",
+            }
+          )
+        ) {
+          appData.deletedItemsHistory = [];
+          saveData();
+          renderHistory();
+          showToast("History cleared.", "success");
+          closeModal("historyModal");
+        }
+      }
+
+      function restoreItem(index) {
+        if (index < 0 || index >= appData.deletedItemsHistory.length) {
+          console.error("Invalid restore index:", index);
+          return;
+        }
+        const item = appData.deletedItemsHistory[index];
+        if (item.type === "button") {
+          const page = appData.pages[currentPageIndex];
+          const sectionIds = Object.keys(page?.sections || {});
+          if (sectionIds.length === 0) {
+            showToast("No sections available to restore the button.", "info");
+            return;
+          }
+
+          const sectionId = sectionIds[0];
+          const section = page.sections[sectionId];
+          const newId = `button-${Date.now()}`;
+          section.buttons.push({ id: newId, text: item.name, href: item.link });
+          appData.deletedItemsHistory.splice(index, 1);
+          saveData();
+          renderCurrentPage();
+          renderHistory();
+          showToast(`Button "${item.name}" restored.`, "success");
+        } else if (item.type === "section") {
+          const newSectionId = `section-${Date.now()}`;
+          const page = appData.pages[currentPageIndex];
+          page.sections[newSectionId] = {
+            text: item.name,
+            buttons: Object.keys(item.buttons).map((id) => ({
+              id: `button-${Date.now()}-${id}`,
+              text: item.buttons[id].name,
+              href: item.buttons[id].link,
+            })),
+          };
+          appData.deletedItemsHistory.splice(index, 1);
+          saveData();
+          renderCurrentPage();
+          renderHistory();
+          showToast(`Section "${item.name}" restored.`, "success");
+        }
+      }
+
+      // universal custom confirm returning Promise<boolean>
+      function customConfirm(message, options = {}) {
+        return new Promise((resolve) => {
+          const modal = document.getElementById("customConfirmModal");
+          const titleEl = document.getElementById("customConfirmTitle");
+          const msgEl = document.getElementById("customConfirmMessage");
+          const yesBtn = document.getElementById("customConfirmYes");
+          const noBtn = document.getElementById("customConfirmNo");
+          const closeBtn = document.getElementById("closeCustomConfirm");
+
+          titleEl.textContent = options.title || "Confirm";
+          msgEl.textContent = message || "";
+          yesBtn.textContent = options.yesText || "Yes";
+          noBtn.textContent = options.noText || "Cancel";
+
+          modal.style.display = "flex";
+          // focus for accessibility
+          yesBtn.focus();
+
+          // handlers
+          function cleanup() {
+            yesBtn.removeEventListener("click", onYes);
+            noBtn.removeEventListener("click", onNo);
+            closeBtn.removeEventListener("click", onNo);
+            modal.removeEventListener("click", onBackdropClick);
+            document.removeEventListener("keydown", onKeyDown);
+            modal.style.display = "none";
+          }
+          function onYes(e) {
+            e && e.preventDefault();
+            cleanup();
+            resolve(true);
+          }
+          function onNo(e) {
+            e && e.preventDefault();
+            cleanup();
+            resolve(false);
+          }
+          function onBackdropClick(e) {
+            if (e.target === modal) onNo();
+          }
+          function onKeyDown(e) {
+            if (e.key === "Escape") onNo();
+          }
+
+          yesBtn.addEventListener("click", onYes);
+          noBtn.addEventListener("click", onNo);
+          closeBtn.addEventListener("click", onNo);
+          modal.addEventListener("click", onBackdropClick);
+          document.addEventListener("keydown", onKeyDown);
+        });
+      }
+
+      // customPrompt — Shows a modal with a textarea, returns a string or null
+      function customPrompt(message, options = {}) {
+        return new Promise((resolve) => {
+          const modal = document.getElementById("customPromptModal");
+          const titleEl = document.getElementById("customPromptTitle");
+          const msgEl = document.getElementById("customPromptMessage");
+          const inputEl = document.getElementById("customPromptInput");
+          const okBtn = document.getElementById("customPromptOk");
+          const cancelBtn = document.getElementById("customPromptCancel");
+          const closeBtn = document.getElementById("closeCustomPrompt");
+
+          titleEl.textContent = options.title || "Manual import";
+          msgEl.textContent = message || "";
+          inputEl.value = options.defaultValue || "";
+
+          modal.style.display = "flex";
+          inputEl.focus();
+
+          function cleanup() {
+            okBtn.removeEventListener("click", onOk);
+            cancelBtn.removeEventListener("click", onCancel);
+            closeBtn.removeEventListener("click", onCancel);
+            modal.removeEventListener("click", onBackdrop);
+            document.removeEventListener("keydown", onKey);
+            modal.style.display = "none";
+          }
+          function onOk(e) {
+            e && e.preventDefault();
+            const val = inputEl.value.trim();
+            cleanup();
+            resolve(val || null);
+          }
+          function onCancel(e) {
+            e && e.preventDefault();
+            cleanup();
+            resolve(null);
+          }
+          function onBackdrop(e) {
+            if (e.target === modal) onCancel();
+          }
+          function onKey(e) {
+            if (e.key === "Escape") onCancel();
+            if ((e.ctrlKey || e.metaKey) && e.key === "Enter") onOk();
+          }
+
+          okBtn.addEventListener("click", onOk);
+          cancelBtn.addEventListener("click", onCancel);
+          closeBtn.addEventListener("click", onCancel);
+          modal.addEventListener("click", onBackdrop);
+          document.addEventListener("keydown", onKey);
+        });
+      }
+
+      function showToast(message, type = "info", duration = 3000) {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+
+        // Анимация появления
+        setTimeout(() => toast.classList.add("show"), 50);
+
+        // Удаление через duration
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => container.removeChild(toast), 300);
+        }, duration);
+      }
+
+      /**
+       * Shows a custom confirmation modal and returns a Promise
+       * that resolves to true (Yes) or false (No).
+       */
+      function customConfirm(message) {
+        return new Promise((resolve) => {
+          const modal = document.getElementById("customConfirmModal");
+          const messageEl = document.getElementById("customConfirmMessage");
+          const yesBtn = document.getElementById("customConfirmYes");
+          const noBtn = document.getElementById("customConfirmNo");
+
+          messageEl.textContent = message;
+          modal.style.display = "flex";
+
+          // Creating event handlers
+          const handleYes = () => {
+            resolve(true);
+            modal.style.display = "none";
+            yesBtn.removeEventListener("click", handleYes);
+            noBtn.removeEventListener("click", handleNo);
+          };
+
+          const handleNo = () => {
+            resolve(false);
+            modal.style.display = "none";
+            yesBtn.removeEventListener("click", handleYes);
+            noBtn.removeEventListener("click", handleNo);
+          };
+
+          yesBtn.addEventListener("click", handleYes);
+          noBtn.addEventListener("click", handleNo);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadData();
+        renderApp();
+        setupPassword();
+
+        document.getElementById("saveBtn")?.addEventListener("click", () => {
+          showModal("saveConfirmModal");
+        });
+        document.getElementById("openBtn")?.addEventListener("click", () => {
+          showModal("importConfirmModal");
+        });
+        document
+          .getElementById("openHistoryBtn")
+          ?.addEventListener("click", () => {
+            renderHistory();
+            showModal("historyModal");
+          });
+        document
+          .getElementById("importInput")
+          ?.addEventListener("change", importData);
+        document.getElementById("contactBtn")?.addEventListener("click", () => {
+          showModal("feedbackModal");
+        });
+        document.getElementById("aboutBtn")?.addEventListener("click", () => {
+          showModal("aboutModal");
+        });
+        document
+          .getElementById("confirmSaveBtn")
+          ?.addEventListener("click", () => {
+            closeModal("saveConfirmModal");
+            exportData();
+          });
+        document
+          .getElementById("confirmImportBtn")
+          ?.addEventListener("click", () => {
+            closeModal("importConfirmModal");
+            document.getElementById("importInput")?.click();
+          });
+        document
+          .getElementById("closeFeedbackModal")
+          ?.addEventListener("click", () => closeModal("feedbackModal"));
+        document
+          .getElementById("cancelFeedbackModal")
+          ?.addEventListener("click", () => closeModal("feedbackModal"));
+        document
+          .getElementById("closeEditModal")
+          ?.addEventListener("click", () => closeModal("editModal"));
+        document
+          .getElementById("cancelEditModalBtn")
+          ?.addEventListener("click", () => cancelAction("editModal"));
+        document
+          .getElementById("closeSectionModal")
+          ?.addEventListener("click", () => closeModal("sectionModal"));
+        document
+          .getElementById("cancelSectionModal")
+          ?.addEventListener("click", () => cancelAction("sectionModal"));
+        document
+          .getElementById("closePasswordModal")
+          ?.addEventListener("click", () => closeModal("passwordModal"));
+        document
+          .getElementById("cancelPasswordModal")
+          ?.addEventListener("click", () => cancelAction("passwordModal"));
+        document
+          .getElementById("closeBookModal")
+          ?.addEventListener("click", () => closeModal("bookModal"));
+        document
+          .getElementById("cancelBookModal")
+          ?.addEventListener("click", () => closeModal("bookModal"));
+        document
+          .getElementById("closeSaveConfirmModal")
+          ?.addEventListener("click", () => closeModal("saveConfirmModal"));
+        document
+          .getElementById("cancelSaveConfirmModal")
+          ?.addEventListener("click", () => cancelAction("saveConfirmModal"));
+        document
+          .getElementById("closeImportConfirmModal")
+          ?.addEventListener("click", () => closeModal("importConfirmModal"));
+        document
+          .getElementById("cancelImportConfirmModal")
+          ?.addEventListener("click", () => cancelAction("importConfirmModal"));
+        document
+          .getElementById("closeHistoryModal")
+          ?.addEventListener("click", () => closeModal("historyModal"));
+        document
+          .getElementById("cancelHistoryModal")
+          ?.addEventListener("click", () => closeModal("historyModal"));
+        document
+          .getElementById("clearHistoryBtn")
+          ?.addEventListener("click", clearHistory);
+        document
+          .getElementById("closeAboutModal")
+          ?.addEventListener("click", () => closeModal("aboutModal"));
+        document
+          .getElementById("cancelAboutModal")
+          ?.addEventListener("click", () => closeModal("aboutModal"));
+        document
+          .getElementById("saveLinkBtn")
+          ?.addEventListener("click", saveLink);
+        document
+          .getElementById("saveSectionBtn")
+          ?.addEventListener("click", saveSection);
+
+        document
+          .getElementById("pasteImportBtn")
+          ?.addEventListener("click", async () => {
+            closeModal("importConfirmModal");
+            const text = await customPrompt("Paste your JSON backup below:", {
+              title: "Manual import",
+            });
+            if (!text) return;
+            try {
+              const imported = JSON.parse(text);
+              handleImportedData(imported);
+            } catch (err) {
+              showToast("Invalid JSON: " + err.message, "error");
+            }
+          });
+
+        document
+          .getElementById("deleteSectionBtn")
+          ?.addEventListener("click", async () => {
+            const ok = await customConfirm(
+              "Are you sure you want to delete this section? This action cannot be undone.",
+              {
+                title: "Confirm section deletion",
+                yesText: "Yes, delete",
+                noText: "No, cancel",
+              }
+            );
+            if (ok) {
+              deleteSection(); // the existing function uses currentSectionId
+            }
+          });
+
+        document
+          .getElementById("setPasswordBtn")
+          ?.addEventListener("click", setPassword);
+        // delete button inside editModal -> ask via customConfirm then delete
+        document
+          .getElementById("deleteButtonBtn")
+          ?.addEventListener("click", async () => {
+            const ok = await customConfirm(
+              "Are you sure you want to delete this button? This action cannot be undone.",
+              {
+                title: "Confirm deletion",
+                yesText: "Yes, delete",
+                noText: "No, cancel",
+              }
+            );
+            if (ok) {
+              deleteButton();
+            }
+          });
+
+        // Handler for submitting a form using Formspree
+        const feedbackForm = document.getElementById("feedbackForm");
+        if (feedbackForm) {
+          feedbackForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // This code is only activated when using Formspree
+            const formData = new FormData(e.target);
+            const response = await fetch(e.target.action, {
+              method: "POST",
+              body: formData,
+              headers: {
+                Accept: "application/json",
+              },
+            });
+
+            if (response.ok) {
+              showToast("Your message has been sent successfully!", "success");
+              closeModal("feedbackModal");
+            } else {
+              showToast(
+                "There was an error sending your message. Please try again later.",
+                "error"
+              );
+            }
+          });
+        } else {
+          // This code is used for mailto: if Formspree is not configured
+          document
+            .getElementById("contactBtn")
+            .addEventListener("click", () => {
+              const emailLink =
+                "mailto:your_email@example.com?subject=Feedback about Linkapp";
+              window.open(emailLink, "_blank");
+            });
+        }
+
+        window.openBookModal = function (id, url) {
+          const modal = document.getElementById("bookModal");
+          const frame = document.getElementById("bookFrame");
+          if (modal && frame) {
+            frame.src = url;
+            modal.style.display = "flex";
+            currentButtonId = id;
+          } else {
+            window.open(url, "_blank");
+          }
+        };
+      });
+    </script>
+  </body>
+</html>
